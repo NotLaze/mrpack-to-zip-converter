@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://yourusername.github.io/mrpack-to-zip/sitemap.xml
+Sitemap: https://notlaze.github.io/mrpack-to-zip-converter/sitemap.xml
