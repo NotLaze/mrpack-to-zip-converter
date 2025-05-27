@@ -10,8 +10,7 @@
   <meta name="author" content="notlaze" />
   <meta name="robots" content="index, follow" />
 
-  <!-- Pixel style font from Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 
   <style>
     /* Reset */
@@ -21,171 +20,71 @@
 
     body {
       margin: 0;
-      font-family: 'Press Start 2P', cursive, monospace;
-      background: url('https://i.imgur.com/zwmGpAq.png') repeat; /* pixel Minecraft grass block pattern */
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 2rem;
-      color: #eee;
-      /* Minecraft greenish overlay */
-      background-color: #3a5a2f;
-      background-blend-mode: multiply;
+      padding: 1rem;
+      color: #333;
     }
 
     .converter-card {
-      background: rgba(0, 0, 0, 0.85);
-      border: 4px solid #5a9e25; /* Minecraft grass green */
-      border-radius: 16px;
+      background: #fff;
+      border-radius: 1rem;
       max-width: 420px;
       width: 100%;
       padding: 2.5rem 2rem 3rem;
+      box-shadow: 0 12px 25px rgba(102, 126, 234, 0.3);
       text-align: center;
-      box-shadow: 0 0 15px #5a9e25;
+      position: relative;
       transition: box-shadow 0.3s ease;
     }
 
     .converter-card:hover {
-      box-shadow: 0 0 30px #7ec850;
+      box-shadow: 0 18px 40px rgba(102, 126, 234, 0.5);
     }
 
     h1 {
-      font-weight: 400;
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      color: #a3d977;
-      text-shadow:
-        1px 1px 0 #000,
-        2px 2px 0 #2a3a0f;
+      font-weight: 600;
+      font-size: 2.25rem;
+      margin-bottom: 0.4rem;
+      color: #4a4a4a;
     }
 
     p {
       font-weight: 400;
-      font-size: 0.85rem;
-      color: #d0f0a9;
+      font-size: 1rem;
+      color: #666;
       margin-bottom: 2rem;
-      line-height: 1.4;
-      text-shadow: 1px 1px 2px #000;
+      line-height: 1.5;
     }
 
-    /* Hide default file input */
+    /* Custom file input */
     input[type="file"] {
       display: none;
     }
 
     label[for="fileInput"] {
       display: inline-block;
-      background-color: #5a9e25;
-      color: #1a2804;
-      padding: 1rem 2.5rem;
-      font-weight: 700;
-      font-size: 0.75rem;
-      border-radius: 12px;
+      background-color: #667eea;
+      color: white;
+      padding: 0.85rem 2rem;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 50px;
       cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      box-shadow:
-        inset 0 0 10px #b2e252,
-        0 4px 0 #2a3a0f;
+      transition: background-color 0.3s ease;
       user-select: none;
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      margin-bottom: 1.8rem;
+      box-shadow: 0 6px 12px rgba(102, 126, 234, 0.35);
     }
 
     label[for="fileInput"]:hover {
-      background-color: #7ec850;
-      box-shadow:
-        inset 0 0 15px #d0f878,
-        0 6px 0 #3a4a1f;
+      background-color: #5a67d8;
+      box-shadow: 0 8px 18px rgba(90, 103, 216, 0.45);
     }
 
-    .btn {
-      background-color: #5a9e25;
-      color: #1a2804;
-      border: none;
-      padding: 1rem 2.5rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      border-radius: 12px;
-      cursor: pointer;
-      box-shadow:
-        inset 0 0 10px #b2e252,
-        0 4px 0 #2a3a0f;
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-      user-select: none;
-    }
-
-    .btn:hover {
-      background-color: #7ec850;
-      box-shadow:
-        inset 0 0 15px #d0f878,
-        0 6px 0 #3a4a1f;
-    }
-
-    footer {
-      margin-top: 2rem;
-      font-size: 0.65rem;
-      color: #9acc72;
-      text-align: center;
-      text-shadow: 1px 1px 2px #000;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-    }
-
-    /* Responsive */
-    @media (max-width: 480px) {
-      .converter-card {
-        padding: 2rem 1.5rem 2.5rem;
-      }
-      label[for="fileInput"],
-      .btn {
-        padding: 0.85rem 2rem;
-        font-size: 0.7rem;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="converter-card" role="main" aria-label="MRPACK to ZIP file converter">
-    <h1>MRPACK to ZIP</h1>
-    <p>Convert your <strong>.mrpack</strong> files to <strong>.zip</strong> format instantly — directly in your browser. No installs, no hassles!</p>
-
-    <label for="fileInput" aria-label="Select MRPACK file to convert">Select .mrpack File</label>
-    <input type="file" id="fileInput" accept=".mrpack" />
-
-    <br />
-    <button class="btn" onclick="convert()" aria-label="Convert selected file to ZIP">Convert</button>
-  </div>
-
-  <footer>
-    &copy; 2025 notlaze — Open Source & Instant
-  </footer>
-
-  <script>
-    function convert() {
-      const input = document.getElementById('fileInput');
-      if (!input.files.length) {
-        alert("Please select a .mrpack file.");
-        return;
-      }
-
-      const file = input.files[0];
-      const zipName = file.name.replace(/\.mrpack$/i, ".zip");
-
-      const reader = new FileReader();
-      reader.onload = function () {
-        const blob = new Blob([reader.result], { type: 'application/zip' });
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = zipName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      };
-      reader.readAsArrayBuffer(file);
-    }
-  </script>
-</body>
-</html>
+    /* Show chosen file name */
+    #file
