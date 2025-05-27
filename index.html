@@ -87,4 +87,68 @@
     }
 
     /* Show chosen file name */
-    #file
+    #fileName {
+      font-weight: 500;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      color: #444;
+      min-height: 1.3em;
+      user-select: text;
+    }
+
+    button.convert-btn {
+      background-color: #764ba2;
+      color: white;
+      padding: 0.85rem 2rem;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 12px rgba(118, 75, 162, 0.35);
+      transition: background-color 0.3s ease;
+    }
+
+    button.convert-btn:hover {
+      background-color: #5a357f;
+      box-shadow: 0 8px 18px rgba(90, 53, 127, 0.45);
+    }
+  </style>
+</head>
+<body>
+  <div class="converter-card">
+    <h1>MRPACK to ZIP Converter</h1>
+    <p>Convert .mrpack files to .zip online instantly. No download required, works in your browser!</p>
+    
+    <input type="file" id="fileInput" accept=".mrpack" />
+    <label for="fileInput">Choose MRPACK file</label>
+
+    <div id="fileName"></div>
+
+    <button class="convert-btn" id="convertBtn" disabled>Convert to ZIP</button>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const fileNameDisplay = document.getElementById('fileName');
+    const convertBtn = document.getElementById('convertBtn');
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) {
+        fileNameDisplay.textContent = fileInput.files[0].name;
+        convertBtn.disabled = false;
+      } else {
+        fileNameDisplay.textContent = '';
+        convertBtn.disabled = true;
+      }
+    });
+
+    convertBtn.addEventListener('click', () => {
+      if (fileInput.files.length === 0) return;
+
+      // TODO: Implement your conversion logic here.
+      alert('Conversion started for ' + fileInput.files[0].name);
+    });
+  </script>
+</body>
+</html>
