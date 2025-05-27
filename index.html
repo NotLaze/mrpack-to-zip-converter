@@ -178,7 +178,6 @@
     convertBtn.addEventListener('click', () => {
       if (fileInput.files.length === 0) return;
 
-      // Show progress bar container and reset progress
       progressContainer.style.display = 'block';
       progressBar.style.width = '0%';
 
@@ -187,17 +186,41 @@
 
       let progress = 0;
 
-      // Simulate conversion progress
       const interval = setInterval(() => {
         progress += 10;
 
         if (progress > 100) {
           clearInterval(interval);
-          alert('Conversion completed for ' + fileInput.files[0].name);
-          convertBtn.disabled = false;
-          fileInput.disabled = false;
-          progressContainer.style.display = 'none';
-          progressBar.style.width = '0%';
+
+          const file = fileInput.files[0];
+          const reader = new FileReader();
+
+          reader.onload = function(e) {
+            const blob = new Blob([e.target.result], { type: 'application/zip' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+
+            // Rename .mrpack to .zip
+            const newFileName = file.name.replace(/\.mrpack$/i, '.zip');
+            a.download = newFileName;
+
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert('Conversion completed for ' + file.name);
+
+            convertBtn.disabled = false;
+            fileInput.disabled = false;
+            progressContainer.style.display = 'none';
+            progressBar.style.width = '0%';
+          };
+
+          reader.readAsArrayBuffer(file);
+
         } else {
           progressBar.style.width = progress + '%';
         }
