@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MRPACK to ZIP Converter</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 100px;
+    }
+    input {
+      margin: 20px;
+    }
+    .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>MRPACK to ZIP Converter</h1>
+  <input type="file" id="fileInput" accept=".mrpack">
+  <br>
+  <button class="btn" onclick="convert()">Convert to ZIP</button>
+
+  <script>
+    function convert() {
+      const input = document.getElementById('fileInput');
+      if (!input.files.length) {
+        alert("Please select a .mrpack file first.");
+        return;
+      }
+
+      const file = input.files[0];
+      const zipName = file.name.replace(/\.mrpack$/i, ".zip");
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        const blob = new Blob([reader.result], { type: 'application/zip' });
+
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = zipName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  </script>
+</body>
+</html>
