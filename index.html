@@ -3,21 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MRPACK to ZIP Converter</title>
-
-  <meta name="description" content="Convert .mrpack files to .zip online instantly. No download required, works in your browser!" />
-  <meta name="keywords" content="mrpack to zip, convert mrpack, minecraft mrpack converter, online converter, modrinth mrpack" />
-  <meta name="author" content="notlaze" />
-  <meta name="robots" content="index, follow" />
+  <title>MRPACK to ZIP Converter with JSZip</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-
   <style>
-    /* Reset */
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-
+    /* Your previous styles here */
+    /* For brevity, same styles as before... */
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
@@ -29,7 +20,6 @@
       padding: 1rem;
       color: #333;
     }
-
     .converter-card {
       background: #fff;
       border-radius: 1rem;
@@ -41,18 +31,15 @@
       position: relative;
       transition: box-shadow 0.3s ease;
     }
-
     .converter-card:hover {
       box-shadow: 0 18px 40px rgba(102, 126, 234, 0.5);
     }
-
     h1 {
       font-weight: 600;
       font-size: 2.25rem;
       margin-bottom: 0.4rem;
       color: #4a4a4a;
     }
-
     p {
       font-weight: 400;
       font-size: 1rem;
@@ -60,12 +47,9 @@
       margin-bottom: 2rem;
       line-height: 1.5;
     }
-
-    /* Custom file input */
     input[type="file"] {
       display: none;
     }
-
     label[for="fileInput"] {
       display: inline-block;
       background-color: #667eea;
@@ -80,13 +64,10 @@
       margin-bottom: 1.8rem;
       box-shadow: 0 6px 12px rgba(102, 126, 234, 0.35);
     }
-
     label[for="fileInput"]:hover {
       background-color: #5a67d8;
       box-shadow: 0 8px 18px rgba(90, 103, 216, 0.45);
     }
-
-    /* Show chosen file name */
     #fileName {
       font-weight: 500;
       font-size: 1rem;
@@ -95,7 +76,6 @@
       min-height: 1.3em;
       user-select: text;
     }
-
     button.convert-btn {
       background-color: #764ba2;
       color: white;
@@ -108,19 +88,15 @@
       box-shadow: 0 6px 12px rgba(118, 75, 162, 0.35);
       transition: background-color 0.3s ease;
     }
-
     button.convert-btn:hover:not(:disabled) {
       background-color: #5a357f;
       box-shadow: 0 8px 18px rgba(90, 53, 127, 0.45);
     }
-
     button.convert-btn:disabled {
       cursor: not-allowed;
       opacity: 0.6;
       box-shadow: none;
     }
-
-    /* Progress bar container */
     #progressContainer {
       width: 100%;
       height: 12px;
@@ -130,8 +106,6 @@
       margin-top: 1.5rem;
       display: none;
     }
-
-    /* Progress bar itself */
     #progressBar {
       height: 100%;
       width: 0%;
@@ -158,6 +132,9 @@
     </div>
   </div>
 
+  <!-- Include JSZip from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
   <script>
     const fileInput = document.getElementById('fileInput');
     const fileNameDisplay = document.getElementById('fileName');
@@ -175,7 +152,7 @@
       }
     });
 
-    convertBtn.addEventListener('click', () => {
+    convertBtn.addEventListener('click', async () => {
       if (fileInput.files.length === 0) return;
 
       progressContainer.style.display = 'block';
@@ -184,47 +161,49 @@
       convertBtn.disabled = true;
       fileInput.disabled = true;
 
-      let progress = 0;
+      try {
+        const file = fileInput.files[0];
 
-      const interval = setInterval(() => {
-        progress += 10;
+        // Read the .mrpack file as ArrayBuffer
+        const arrayBuffer = await file.arrayBuffer();
 
-        if (progress > 100) {
-          clearInterval(interval);
+        // Load it with JSZip
+        const zip = await JSZip.loadAsync(arrayBuffer);
 
-          const file = fileInput.files[0];
-          const reader = new FileReader();
+        // Optional: You can list files if you want to debug
+        // console.log("Files inside mrpack:", Object.keys(zip.files));
 
-          reader.onload = function(e) {
-            const blob = new Blob([e.target.result], { type: 'application/zip' });
-            const url = URL.createObjectURL(blob);
+        // Generate new zip blob
+        const zipBlob = await zip.generateAsync(
+          { type: "blob" },
+          metadata => {
+            // Update progress bar
+            let percent = metadata.percent.toFixed(0);
+            progressBar.style.width = percent + '%';
+          }
+        );
 
-            const a = document.createElement('a');
-            a.href = url;
+        // Create URL for download
+        const url = URL.createObjectURL(zipBlob);
 
-            // Rename .mrpack to .zip
-            const newFileName = file.name.replace(/\.mrpack$/i, '.zip');
-            a.download = newFileName;
+        // Create temporary link to download the new ZIP file
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = file.name.replace(/\.mrpack$/i, '.zip');
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
 
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+        alert('Conversion completed for ' + file.name);
+      } catch (err) {
+        alert('Error during conversion: ' + err.message);
+      }
 
-            alert('Conversion completed for ' + file.name);
-
-            convertBtn.disabled = false;
-            fileInput.disabled = false;
-            progressContainer.style.display = 'none';
-            progressBar.style.width = '0%';
-          };
-
-          reader.readAsArrayBuffer(file);
-
-        } else {
-          progressBar.style.width = progress + '%';
-        }
-      }, 300);
+      convertBtn.disabled = false;
+      fileInput.disabled = false;
+      progressContainer.style.display = 'none';
+      progressBar.style.width = '0%';
     });
   </script>
 </body>
